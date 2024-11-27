@@ -1,0 +1,234 @@
+img {
+  display: flex;
+  max-width: 100%;
+  height: auto;
+  margin: 50px;
+  max-width: 500px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.other-rooms {
+  margin-bottom: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.room-item-info {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 40px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.main {
+  height: 1000px;
+}
+
+.room-title1 {
+  text-align: center;
+  margin-bottom: 50px;
+  margin-top: 50px;
+  font-size: 50px;
+}
+
+.room-title2 {
+  margin-bottom: 50px;
+  margin-top: 50px;
+  font-size: 50px;
+}
+
+.room-title3 {
+  margin-bottom: 50px;
+  margin-top: 50px;
+  font-size: 30px;
+  text-decoration: none !important;
+}
+
+.price {
+  text-align: center;
+  font-size: 30px;
+}
+
+.btn.js-buy-ticket {
+  padding-right: 10px;
+  padding-left: 10px;
+  border: 5px solid black;
+  height: 50px;
+  font-size: 30px;
+  display: block;
+  /* Ensure the button is a block element */
+  margin: 0 auto;
+  /* Center the button horizontally */
+  text-align: center;
+  /* Center the text within the button */
+  background-color: yellow;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+.modal-container {
+  background-color: #fff;
+  width: 900px;
+  max-width: calc(100%-32px);
+  min-height: 200px;
+  position: relative;
+  animation: modalFadeIn ease 1s;
+}
+
+.modal-header {
+  background: yellow;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: black;
+}
+
+.modal-header .modal-heading-icon {
+  margin-right: 16px;
+}
+
+.modal-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #fff;
+  padding: 12px;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.modal-close:hover {
+  opacity: 1;
+}
+
+.modal-label {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+.modal-input {
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+#buy-tickets {
+  background: yellow;
+  border: none;
+  color: black;
+  width: 100%;
+  font-size: 15px;
+  text-transform: uppercase;
+  padding: 12px;
+}
+
+.modal-footer {
+  padding: 16px;
+  text-align: right;
+}
+
+.modal-footer {
+  color: #2196f3;
+}
+
+.modal.open {
+  display: flex;
+}
+
+@keyframes modalFadeIn {
+  from {
+    transform: translateY(-140px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.room-info-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.room-title {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.room-price {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.additional-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  justify-items: center;
+}
+
+.additional-images-grid img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.additional-images-grid img:hover {
+  transform: scale(1.05);
+}
+
+.book-now-button {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  background-color: #f4b400; /* Yellow color */
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-now-button:hover {
+  background-color: #e3a300; /* Darker yellow */
+}

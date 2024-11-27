@@ -1,0 +1,216 @@
+import Express from "express";
+import mysql from "mysql";
+import cors from "cors";
+
+const app = Express();
+
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "dorm",
+});
+
+app.use(Express.json());
+app.use(cors());
+app.get("/", (req, res) => {
+  res.json("helo");
+});
+
+// DORM
+//
+//get dorm
+app.get("/dorm", (req, res) => {
+  const q = "SELECT * FROM dorm_list";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//post dorm
+app.post("/dorm", (req, res) => {
+  const q =
+    "INSERT INTO dorm_list (`name`, `slot`,`price`, `status`) VALUES (?)";
+  const values = [
+    req.body.name,
+    req.body.slot,
+    req.body.price,
+    req.body.status,
+  ];
+
+  db.query(q, [values], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Dorm has been created");
+  });
+});
+//delte dorm
+app.delete("/dorm/:id", (req, res) => {
+  const dormId = req.params.id;
+  const q = "DELETE FROM dorm_list WHERE id = ?";
+
+  db.query(q, [dormId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Dorm has been deleted");
+  });
+});
+//edit dorm nhưng chưa dùng
+app.put("/dorm/:id", (req, res) => {
+  const dormId = req.params.id;
+  const q =
+    "UPDATE dorm_list SET `name`=?, `slot`=?,`price`=?, `status`=? WHERE id=?";
+  const values = [
+    req.body.name,
+    req.body.slot,
+    req.body.price,
+    req.body.status,
+  ];
+
+  db.query(q, [...values, dormId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Dorm has been updated");
+  });
+});
+
+//ROOM
+//
+// get room kèm dorm
+app.get("/room", (req, res) => {
+  const q =
+    "SELECT r.id AS id, r.number AS room_number, dl.name AS dorm_name, dl.price AS dorm_price, (dl.slot - COUNT(sr.id)) AS available_slot FROM room r JOIN dorm_list dl ON r.dorm_id = dl.id LEFT JOIN student_room sr ON r.id = sr.room_id GROUP BY r.id, dl.id ORDER BY `room_number` ASC;";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//post room
+app.post("/room", (req, res) => {
+  const q = "INSERT INTO room (`number`, `dorm_id`) VALUES (?)";
+  const values = [req.body.number, req.body.dorm_id];
+
+  db.query(q, [values], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Room has been created");
+  });
+});
+//delete room
+app.delete("/room/:id", (req, res) => {
+  const roomId = req.params.id;
+  const q = "DELETE FROM room WHERE id = ?";
+
+  db.query(q, [roomId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Room has been deleted");
+  });
+});
+
+// student
+//
+//get studentInfo
+app.get("/studentInfo", (req, res) => {
+  const q = "SELECT * FROM student_info";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//get studentInfo where status=1
+app.get("/studentInfo_status1", (req, res) => {
+  const q = "SELECT * FROM student_info WHERE student_info.status = 1";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//post studentInfo
+app.post("/studentInfo", (req, res) => {
+  const q =
+    "INSERT INTO student_info (`code`, `name`,`pass`, `gender`,`contact`) VALUES (?)";
+  const values = [
+    req.body.code,
+    req.body.name,
+    req.body.pass,
+    req.body.gender,
+    req.body.contact,
+  ];
+
+  db.query(q, [values], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("studentInfo has been created");
+  });
+});
+//delete studentInfo
+app.delete("/studentInfo/:id", (req, res) => {
+  const dormId = req.params.id;
+  const q = "DELETE FROM student_info WHERE id = ?";
+
+  db.query(q, [dormId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("studentInfo has been deleted");
+  });
+});
+
+// student room
+//
+//get student chưa có room
+app.get("/studentnoRoom", (req, res) => {
+  const q =
+    "SELECT student_info.id,student_info.code , student_info.name FROM student_info LEFT JOIN student_room ON student_info.id = student_room.info_id WHERE student_room.info_id IS NULL;";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//get room còn chỗ cho student
+app.get("/availableroom", (req, res) => {
+  const q =
+    "SELECT r.id, r.number, dl.name AS room_name, (dl.slot - COUNT(sr.id)) AS available_slot FROM room r JOIN dorm_list dl ON r.dorm_id = dl.id LEFT JOIN student_room sr ON r.id = sr.room_id GROUP BY r.id, dl.id HAVING available_slot > 0 ORDER BY `available_slot` ASC;";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//get student_info kèm room
+app.get("/studentroom", (req, res) => {
+  const q =
+    "SELECT sr.id, si.code AS info_code, si.name AS info_name, r.number AS room_number, dl.price, dl.name AS dorm_name FROM student_info si JOIN student_room sr ON si.id = sr.info_id JOIN room r ON sr.room_id = r.id JOIN dorm_list dl ON r.dorm_id = dl.id;";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+//post studentRoom
+app.post("/studentRoom", (req, res) => {
+  const q = "INSERT INTO student_room (`info_id`, `room_id`) VALUES (?)";
+  const values = [req.body.info_id, req.body.room_id];
+
+  db.query(q, [values], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("studentRoom has been created");
+  });
+});
+//delete studentroom
+app.delete("/studentRoom/:id", (req, res) => {
+  const dormId = req.params.id;
+  const q = "DELETE FROM student_room WHERE id = ?";
+
+  db.query(q, [dormId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("studentRoom has been deleted");
+  });
+});
+
+//get mem của room
+app.get("/room/:id", (req, res) => {
+  const dormId = req.params.id;
+  const q =
+    "SELECT sr.*, si.name, si.code, si.contact, room.number AS room_number FROM student_room sr JOIN student_info si ON sr.info_id = si.id JOIN room ON sr.room_id = room.id WHERE sr.room_id = ?";
+
+  db.query(q, [dormId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+app.listen(8081, () => {
+  console.log("connected");
+});
